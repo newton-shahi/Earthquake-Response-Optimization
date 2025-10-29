@@ -8,7 +8,7 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/graphhopper/graphhoppe
 Invoke-WebRequest -Uri "http://download.geofabrik.de/asia/nepal-latest.osm.pbf" -OutFile "nepal-latest.osm.pbf"
 
 
-✅ After this, you should have:
+ After this, you should have:
 
 arduino
 Copy
@@ -19,36 +19,46 @@ C:\graphhopper10\
 ├── nepal-latest.osm.pbf
 
 
-🚀 Run GraphHopper with Nepal Map
+ Run GraphHopper with Nepal Map
 Still in PowerShell:
 
 powershell
-Copy
-Edit
+
 java -D"dw.graphhopper.datareader.file=nepal-latest.osm.pbf" -jar graphhopper-web-10.0.jar server config-example.yml
 Once you see:
 
 arduino
-Copy
-Edit
+
 Server - Started @8989
 Open:
 
 arduino
-Copy
-Edit
+
 http://localhost:8989/
 ⚠ If PowerShell blocks scripts/downloads
 Run this once (admin PowerShell):
 
 powershell
-Copy
-Edit
+
 Set-ExecutionPolicy RemoteSigned
 
 
 
 
+
+Below is unnecessary alternates we can use. They are not used because :
+
+GraphHopper advantages:
+
+-Uses much less RAM
+
+-Starts faster after first build
+
+-Easier to integrate via simple REST API (/route?point=A&point=B)
+
+-No database dependency → portable, zero setup
+
+-Runs with just .jar + .osm.pbf
 
 
 🚍 B. OpenTripPlanner (if using transit, schedules, etc.)
@@ -60,23 +70,20 @@ GTFS feeds (optional, if public transport is modeled)
 
 Build command:
 
-bash
-Copy
-Edit
+
 java -Xmx4G -jar otp.jar --build ./graphs/nepal/
 Generates OTP graph you can query via API.
 
-✅ 3. Load into PostgreSQL + PostGIS
-🔧 Use osm2pgsql (fastest for PostGIS import)
-bash
-Copy
-Edit
+ 3. Load into PostgreSQL + PostGIS
+ Use osm2pgsql (fastest for PostGIS import)
+
 osm2pgsql -d your_db -U your_user -H localhost \
   --create --slim \
   --hstore \
   --style default.style \
   nepal-latest.osm.pbf
-✅ Creates PostGIS tables like:
+
+Creates PostGIS tables like:
 
 planet_osm_point, planet_osm_line, planet_osm_polygon
 
@@ -88,16 +95,13 @@ Overlay damage zones
 
 Perform routing-related spatial analysis (blocked roads, shortest safe path, etc.)
 
-✅ 4. (Optional) Preprocess with Osmosis or osmium-tool
+ 4. (Optional) Preprocess with Osmosis or osmium-tool
 Use this if you want to:
 
 Extract only roads or certain tags (e.g., highway=primary)
 
 Clip to bounding box (e.g., Kathmandu Valley)
 
-bash
-Copy
-Edit
 osmosis --read-pbf nepal-latest.osm.pbf \
   --bounding-box top=28.3 left=83.9 bottom=27.6 right=85.6 \
   --write-pbf kathmandu.osm.pbf
