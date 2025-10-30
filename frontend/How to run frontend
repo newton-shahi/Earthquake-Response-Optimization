@@ -1,0 +1,167 @@
+Step 1: Install Node.js & Create React App
+
+Install Node.js & npm
+
+Check if installed:
+
+node -v
+npm -v
+
+
+If not, download from Node.js LTS (https://nodejs.org/en/).
+
+
+
+Create a React project
+
+inside frontend 
+
+npx create-react-app earthquake-sim --template cra-template-pwa
+
+I chose PWA template to allow future offline simulation features if needed.
+
+
+
+cd earthquake-sim
+npm install web-vitals
+
+npm start
+
+Your browser should open http://localhost:3000 with a React welcome page.
+
+
+
+Step 2: Install TailwindCSS
+
+Install Tailwind packages
+inside earthquake-sim
+
+npm i -D tailwindcss@3 postcss autoprefixer
+
+(we are working in 3 version not 4.x because 4 is completely different)
+
+npx tailwindcss init 
+
+
+
+Configure Tailwind
+
+tailwind.config.js:
+
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+
+
+Add Tailwind directives to src/index.css
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+Restart dev server
+
+npm start
+
+
+Tailwind classes now work in React components.
+
+
+
+
+Step 3: Install Leaflet (or MapLibre)
+
+Install packages
+
+npm install leaflet react-leaflet
+npm install leaflet-defaulticon-compatibility
+
+
+leaflet-defaulticon-compatibility fixes missing marker icon issues in React.
+
+Add Leaflet CSS
+In src/index.css:
+
+@import "leaflet/dist/leaflet.css";
+
+
+Test map component
+
+Create src/components/MapView.jsx:
+
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+
+export default function MapView() {
+  return (
+    <MapContainer center={[28.3949, 84.1240]} zoom={7} style={{ height: '600px', width: '100%' }}>
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution="&copy; OpenStreetMap contributors"
+      />
+      <Marker position={[28.3949, 84.1240]}>
+        <Popup>Nepal Center</Popup>
+      </Marker>
+    </MapContainer>
+  );
+}
+
+
+In App.js:
+
+import MapView from './components/MapView';
+
+function App() {
+  return <MapView />;
+}
+
+export default App;
+
+
+You should now see Nepal map with a marker.
+
+
+
+
+Step 6: Install Animation Library
+
+React Spring (simpler) or GSAP:
+
+npm install @react-spring/web
+
+
+Animate moving markers along routes.
+
+Example:
+
+import { useSpring, animated } from '@react-spring/web';
+
+Step 7: Install Optional UI Library
+
+Material UI (recommended for control panels):
+
+npm install @mui/material @emotion/react @emotion/styled
+
+
+Or, purely Tailwind with Glassmorphism/Neumorphism.
+
+
+
+
+finished:
+
+
+extra:
+
+https://www.gps-coordinates.net
+
+use this for finding a better polygon coordinate for nepal (in app.jsx)
+
